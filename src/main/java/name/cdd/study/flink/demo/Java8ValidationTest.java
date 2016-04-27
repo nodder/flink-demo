@@ -4,7 +4,7 @@ import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.tuple.Tuple1;
 
 //https://ci.apache.org/projects/flink/flink-docs-release-1.0/apis/java8.html
-public class Java8Test
+public class Java8ValidationTest
 {
     public static void main(String[] args) throws Exception
     {
