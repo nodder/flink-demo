@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-kafka-0.10_2.10</artifactId><!-- flink-connector-kafka-0.9_2.11 -->
+            <artifactId>flink-connector-kafka-0.10_2.10</artifactId>
             <version>${flink.version}</version>
         </dependency>
         
@@ -71,7 +71,6 @@
                 <executions>
                     <execution>
                         <id>unpack</id>
-                        <!-- executed just before the package phase -->
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>unpack</goal>
@@ -79,34 +78,59 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>com.google.guava</groupId>
-                                    <artifactId>guava</artifactId>
-                                    <version>23.0</version>
-                                    <type>jar</type>
-                                    <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                    <includes>com/google/**</includes>
-                                </artifactItem>
-                               <!-- For Flink connector classes
-                                <artifactItem>
                                     <groupId>org.apache.flink</groupId>
-                                    <artifactId>flink-connector-kafka</artifactId>
-                                    <version>0.10.2</version>
+                                    <artifactId>flink-streaming-java_2.11</artifactId>
+                                    <version>${flink.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/classes</outputDirectory>
                                     <includes>org/apache/flink/**</includes>
                                 </artifactItem>
-                                For Kafka API classes
                                 <artifactItem>
-                                    <groupId>org.apache.kafka</groupId>
-                                    <artifactId>kafka_2.11</artifactId>
-                                    <version>0.10.2.1</version>
+                                    <groupId>org.apache.flink</groupId>
+                                    <artifactId>flink-streaming-java_2.11</artifactId>
+                                    <version>${flink.version}</version>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                                    <includes>kafka/**</includes>
-                                </artifactItem> -->
+                                    <includes>org/apache/flink/**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.flink</groupId>
+                                    <artifactId>flink-connector-kafka-0.10_2.10</artifactId>
+                                    <version>${flink.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>org/apache/flink/**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.flink</groupId>
+                                    <artifactId>flink-connector-kafka-0.9_2.10</artifactId>
+                                    <version>${flink.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>org/apache/flink/**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.flink</groupId>
+                                    <artifactId>flink-connector-kafka-base_2.10</artifactId>
+                                    <version>${flink.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>org/apache/flink/**</includes>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.apache.kafka</groupId>
+                                    <artifactId>kafka-clients</artifactId>
+                                    <version>0.10.2.0</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                                    <includes>org/apache/**</includes>
+                                </artifactItem>
                             </artifactItems>
                         </configuration>
                     </execution>

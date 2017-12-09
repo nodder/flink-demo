@@ -8,58 +8,88 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 
 public class KafkaSample
 {
-    private static String bootstrap_servers = "hadoop2:9092,hadoop3:9092,hadoop4:9092";
-    private static String group_id = "flink-group";
+    private static final String SUFFIX = " by cdd.";
     
+    /**
+     * args example: -input-topic fin -output-topic fout -bootstrap-server hadoop2:9092,hadoop3:9092,hadoop4:9092 -group-id flink-group
+     * -group-id参数可选，其他必选。
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception
     {
           final ParameterTool parameterTool = ParameterTool.fromArgs(args);
           String inputTopic = parameterTool.getRequired("input-topic");
           String outputTopic = parameterTool.getRequired("output-topic");
-          String prefix = parameterTool.get("prefix", "PREFIX:");
           
           Properties props = new Properties();
-          props.setProperty("bootstrap.servers", bootstrap_servers);
-          props.setProperty("group.id", group_id);
+          props.setProperty("bootstrap.servers", parameterTool.getRequired("bootstrap-server"));
+          props.setProperty("group.id", parameterTool.get("group-id", "myGroupId"));
 
+          /**
+           * Creates an execution environment that represents the context in which the program is currently executed. 
+           * If the program is invoked standalone, this method returns a local execution environment, as returned by createLocalEnvironment().
+           */
           StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
           
+          /**
+           * Disables the printing of progress update messages to System.out
+           */
 //          env.getConfig().disableSysoutLogging();
+          
+          /**
+           * Sets the restart strategy to be used for recovery.
+           */
           env.getConfig().setRestartStrategy(RestartStrategies.fixedDelayRestart(4, 10000));
-          env.enableCheckpointing(5000); // create a checkpoint every 5 seconds
-          env.getConfig().setGlobalJobParameters(parameterTool); // make parameters available in the web interface
+          
+          /**
+           * Enables checkpointing for the streaming job. The distributed state of the streaming dataflow will be periodically snapshotted. 
+           * In case of a failure, the streaming dataflow will be restarted from the latest completed checkpoint. 
+           * This method selects CheckpointingMode.EXACTLY_ONCE guarantees.
+           */
+          env.enableCheckpointing(5000);
+          
+          /**
+           * This method allows users to set custom objects as a global configuration for the job. Since the ExecutionConfig is accessible 
+           * in all user defined functions, this is an easy method for making configuration globally available in a job.
+           */
+          env.getConfig().setGlobalJobParameters(parameterTool);
 
-          DataStream<String> input = env
-                  .addSource(new FlinkKafkaConsumer010<>(//FlinkKafkaConsumer010
-                             inputTopic,
-                             new SimpleStringSchema(),
-                             props))
-                  .map(new PrefixingMapper(prefix));
+          /**
+           * SimpleStringSchema: Creates a new SimpleStringSchema that uses "UTF-8" as the encoding. One of DeserializationSchema.
+           */
+          DataStream<String> input = env.addSource(new FlinkKafkaConsumer010<>(inputTopic,new SimpleStringSchema(),props))
+                                        .map(new SuffixMapper(SUFFIX));
 
           input.print().setParallelism(1);
-//          input.addSink(new FlinkKafkaProducer010<>(
-//                        outputTopic,
-//                        new SimpleStringSchema(),
-//                        props));
+          
+          /**
+           * SimpleStringSchema : One of SerializationSchema
+           */ 
+          input.addSink(new FlinkKafkaProducer010<>(
+                        outputTopic,
+                        new SimpleStringSchema(),
+                        props));
 
           env.execute("Kafka 0.10 Example");
     }
     
     @SuppressWarnings ("serial")
-    private static class PrefixingMapper implements MapFunction<String, String> {
-        private final String prefix;
+    private static class SuffixMapper implements MapFunction<String, String> {
+        private final String suffix;
 
-        public PrefixingMapper(String prefix) {
-            this.prefix = prefix;
+        public SuffixMapper(String prefix) {
+            this.suffix = prefix;
         }
 
         @Override
         public String map(String value) throws Exception {
-            return prefix + value;
+            return value + suffix;
         }
     }
 }
