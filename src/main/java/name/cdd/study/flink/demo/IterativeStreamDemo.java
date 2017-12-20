@@ -8,6 +8,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 public class IterativeStreamDemo
 {
+    @SuppressWarnings ("serial")
     public static void main(String[] args) throws Exception
     {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();

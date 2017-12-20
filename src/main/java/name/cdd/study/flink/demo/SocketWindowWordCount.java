@@ -28,8 +28,10 @@ public class SocketWindowWordCount
                     }
                 })
                 .keyBy("word")
-                .timeWindow(Time.seconds(6), Time.seconds(3))
-//                .timeWindow(Time.seconds(3))
+//              .window(TumblingProcessingTimeWindows.of(Time.seconds(3))) //滚动窗口1 可以指定第2个参数offset，用于例如时区。
+//              .timeWindow(Time.seconds(3)) //滚动窗口2
+//              .window(SlidingProcessingTimeWindows.of(Time.seconds(6), Time.seconds(3))) //滑动窗口1 可以指定第3个参数offset，用于例如时区。
+               .timeWindow(Time.seconds(6), Time.seconds(3)) //滑动窗口2
                 .reduce(new ReduceFunction<WordWithCount>() {
                     private static final long serialVersionUID = 4852907855251038442L;
 
