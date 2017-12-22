@@ -11,7 +11,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
-import org.apache.flink.streaming.connectors.kafka.Kafka09JsonTableSink;
+import org.apache.flink.streaming.connectors.kafka.Kafka010JsonTableSink;
 import org.apache.flink.streaming.connectors.kafka.partitioner.FlinkFixedPartitioner;
 import org.apache.flink.streaming.util.serialization.JSONDeserializationSchema;
 import org.apache.flink.table.api.Table;
@@ -90,7 +90,7 @@ public class TableDemo_sql_kafka_with_watermark
         resultDs.print();
         
         //如果不定义as别名，则输出的key为EXPR$2，EXPR$3等。
-        Kafka09JsonTableSink tableSink = new Kafka09JsonTableSink(outputTopic, props, new FlinkFixedPartitioner<Row>());//Kafka09JsonTableSink只能用于append-only的table
+        Kafka010JsonTableSink tableSink = new Kafka010JsonTableSink(outputTopic, props, new FlinkFixedPartitioner<Row>());//Kafka09JsonTableSink只能用于append-only的table。Kafka010JsonTableSink还没试过。
         resultTable.writeToSink(tableSink);
         env.execute();
     }
