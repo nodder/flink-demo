@@ -20,7 +20,7 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
 import org.apache.flink.streaming.api.windowing.time.Time;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.streaming.util.serialization.JSONDeserializationSchema;
 
 
@@ -42,7 +42,7 @@ public class CepKafkaDemo
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 //        StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(env);
         
-       KeyedStream<Tuple4<Integer, String, Integer, Long>, Tuple> partitionedInput = env.addSource(new FlinkKafkaConsumer010<>(inputTopic,new JSONDeserializationSchema(),props))
+       KeyedStream<Tuple4<Integer, String, Integer, Long>, Tuple> partitionedInput = env.addSource(new FlinkKafkaConsumer011<>(inputTopic,new JSONDeserializationSchema(),props))
           .map(objNode -> new Tuple4<>(objNode.get("id").asInt(), objNode.get("name").asText(), objNode.get("score").asInt(), toTime(objNode.get("occur").asText())))
           .assignTimestampsAndWatermarks(new AscendingTimestampExtractor<Tuple4<Integer, String, Integer, Long>>(){            
               private static final long serialVersionUID = 604378562837574295L;

@@ -10,6 +10,11 @@ import org.apache.flink.util.Collector;
 
 import name.cdd.study.flink.demo.pojo.WordWithCount;
 
+/**
+ * Flink入门第一个例子，jdk8版本。
+ * @author admin
+ *
+ */
 public class SocketWindowWordCountJava8
 {
     public static void main(String[] args) throws Exception {

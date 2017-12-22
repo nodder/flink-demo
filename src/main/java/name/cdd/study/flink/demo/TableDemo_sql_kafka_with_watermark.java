@@ -10,7 +10,7 @@ import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.streaming.connectors.kafka.Kafka09JsonTableSink;
 import org.apache.flink.streaming.connectors.kafka.partitioner.FlinkFixedPartitioner;
 import org.apache.flink.streaming.util.serialization.JSONDeserializationSchema;
@@ -65,7 +65,7 @@ public class TableDemo_sql_kafka_with_watermark
         env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(env);
         
-        DataStream<Tuple4<Integer, String, Integer, Long>> inStreamWithWatermark = env.addSource(new FlinkKafkaConsumer010<>(inputTopic,new JSONDeserializationSchema(),props))
+        DataStream<Tuple4<Integer, String, Integer, Long>> inStreamWithWatermark = env.addSource(new FlinkKafkaConsumer011<>(inputTopic,new JSONDeserializationSchema(),props))
            .map(objNode -> new Tuple4<>(objNode.get("id").asInt(), objNode.get("name").asText(), objNode.get("score").asInt(), toTime(objNode.get("occur").asText())))
            .assignTimestampsAndWatermarks(new AscendingTimestampExtractor<Tuple4<Integer, String, Integer, Long>>(){            
                                                         private static final long serialVersionUID = 604378562837574295L;
@@ -84,7 +84,7 @@ public class TableDemo_sql_kafka_with_watermark
         @SuppressWarnings ("unused")
         String sql2 = "select id, sum(score), TUMBLE_START(proctime, INTERVAL '5' SECOND), TUMBLE_END(proctime, INTERVAL '5' SECOND) from message GROUP BY id, TUMBLE(proctime, INTERVAL '5' SECOND)";
         
-        Table resultTable = tableEnv.sql(sql1);
+        Table resultTable = tableEnv.sqlQuery(sql1);
                         
         DataStream<Row> resultDs = tableEnv.toAppendStream(resultTable, Row.class);
         resultDs.print();

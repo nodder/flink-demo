@@ -12,13 +12,16 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExtractor;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010.FlinkKafkaProducer010Configuration;
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
 
 //http://colabug.com/122248.html
 //每次输入一个单词，例如aaa
+//该例子往output kafka输出时携带了时间戳信息，是0.10x的特性（FlinkKafkaProducer010）。但FlinkKafkaProducer011却没有这种用法，且在1.4中SimpleStringSchema已经被废弃了，改成了另外一个包下的同名文件。
+//1.4下，如果有同样的需求，还是再挖掘下更好的写法。
+@SuppressWarnings ("deprecation")
 public class KafkaSample2_timestamp
 {
     private static final String SUFFIX = " by cdd.";
@@ -46,7 +49,7 @@ public class KafkaSample2_timestamp
           env.enableCheckpointing(5000);
           env.getConfig().setGlobalJobParameters(parameterTool);
 
-          DataStream<String> inStream = env.addSource(new FlinkKafkaConsumer010<>(inputTopic,new SimpleStringSchema(),props))
+          DataStream<String> inStream = env.addSource(new FlinkKafkaConsumer011<>(inputTopic,new SimpleStringSchema(),props))
                                         .map(new SuffixMapper(SUFFIX));
           
           DataStream<String> result = inStream
@@ -60,7 +63,6 @@ public class KafkaSample2_timestamp
           
           
           result.print().setParallelism(1);
-          
           FlinkKafkaProducer010Configuration<String> producerConfig = FlinkKafkaProducer010.writeToKafkaWithTimestamps(
               result,                   // input stream
               outputTopic,                 // target topic

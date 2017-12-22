@@ -4,13 +4,18 @@ import java.util.Properties;
 
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.restartstrategy.RestartStrategies;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer010;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer010;
-import org.apache.flink.streaming.util.serialization.SimpleStringSchema;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
+import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer011;
 
+/**
+ * 最基本的kafka输入输出的例子。
+ * @author admin
+ *
+ */
 public class KafkaSample
 {
     private static final String SUFFIX = " by cdd.";
@@ -63,7 +68,7 @@ public class KafkaSample
           /**
            * SimpleStringSchema: Creates a new SimpleStringSchema that uses "UTF-8" as the encoding. One of DeserializationSchema.
            */
-          DataStream<String> input = env.addSource(new FlinkKafkaConsumer010<>(inputTopic,new SimpleStringSchema(),props))
+          DataStream<String> input = env.addSource(new FlinkKafkaConsumer011<>(inputTopic,new SimpleStringSchema(),props))
                                         .map(new SuffixMapper(SUFFIX));
 
           input.print().setParallelism(1);
@@ -71,7 +76,7 @@ public class KafkaSample
           /**
            * SimpleStringSchema : One of SerializationSchema
            */ 
-          input.addSink(new FlinkKafkaProducer010<>(
+          input.addSink(new FlinkKafkaProducer011<>(
                         outputTopic,
                         new SimpleStringSchema(),
                         props));

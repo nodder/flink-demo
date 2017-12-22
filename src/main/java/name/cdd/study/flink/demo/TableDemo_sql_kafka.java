@@ -9,10 +9,12 @@ import org.apache.flink.core.fs.FileSystem.WriteMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.Kafka010JsonTableSource;
+import org.apache.flink.streaming.connectors.kafka.Kafka011JsonTableSource;
 import org.apache.flink.streaming.connectors.kafka.Kafka09JsonTableSink;
 import org.apache.flink.streaming.connectors.kafka.partitioner.FlinkFixedPartitioner;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.TableEnvironment;
+import org.apache.flink.table.api.TableSchema;
 import org.apache.flink.table.api.Types;
 import org.apache.flink.table.api.java.StreamTableEnvironment;
 import org.apache.flink.table.sinks.CsvTableSink;
@@ -37,12 +39,13 @@ public class TableDemo_sql_kafka
         props.setProperty("bootstrap.servers", parameterTool.getRequired("bootstrap-server"));
         props.setProperty("group.id", parameterTool.get("group-id", "myGroupId"));
 
-        TypeInformation<Row> typeInfo = Types.ROW(
-            new String[] { "id", "name", "score" },
-            new TypeInformation<?>[] { Types.INT(), Types.STRING(), Types.INT() }
-          );
+//        TypeInformation<Row> typeInfo = Types.ROW(
+//            new String[] { "id", "name", "score" },
+//            new TypeInformation<?>[] { Types.INT(), Types.STRING(), Types.INT() }
+//          );
+        TableSchema ts = new TableSchema(new String[] { "id", "name", "score" }, new TypeInformation<?>[] { Types.INT(), Types.STRING(), Types.INT()});
         
-        Kafka010JsonTableSource tableSource = new Kafka010JsonTableSource(inputTopic, props, typeInfo);
+        Kafka011JsonTableSource tableSource = new Kafka011JsonTableSource(inputTopic, props, ts, ts);
         // Fail on missing JSON field
         //By default, a missing JSON field does not fail the source
         tableSource.setFailOnMissingField(false);
@@ -53,8 +56,8 @@ public class TableDemo_sql_kafka
         
         /** 选择一种情况放开验证 start */
 //        case1_append_only_to_csv(tableEnv);
-        case2_append_only_to_kafka(outputTopic, props, tableEnv);
-//        case3_append_only_print(tableEnv);
+//        case2_append_only_to_kafka(outputTopic, props, tableEnv);
+        case3_append_only_print(tableEnv);
 //        case4_retract_print(tableEnv);
         
         /** 选择一种情况放开验证 end */

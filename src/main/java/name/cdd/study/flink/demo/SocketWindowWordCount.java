@@ -7,6 +7,11 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.util.Collector;
 
+/**
+ * Flink入门第一个例子
+ * @author admin
+ *
+ */
 public class SocketWindowWordCount
 {
     public static void main(String[] args) throws Exception {

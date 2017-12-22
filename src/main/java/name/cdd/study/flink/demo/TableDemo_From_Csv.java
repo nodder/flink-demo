@@ -51,7 +51,7 @@ public class TableDemo_From_Csv
         
         
         //查询球员所在的国家，以及这些国家的球员（内援和外援）的总进球数
-        Table groupedByCountry = tableEnv.sql("select country,sum(total_score) as sum_total_score from topScore group by country order by 2 desc");
+        Table groupedByCountry = tableEnv.sqlQuery("select country,sum(total_score) as sum_total_score from topScore group by country order by 2 desc");
         //转换回dataset
         DataSet<Result> result = tableEnv.toDataSet(groupedByCountry,Result.class);
 
