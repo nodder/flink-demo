@@ -1,4 +1,4 @@
-package name.cdd.study.flink.demo;
+package name.cdd.study.flink.demo.sample;
 
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
 import org.apache.flink.api.common.state.ValueState;

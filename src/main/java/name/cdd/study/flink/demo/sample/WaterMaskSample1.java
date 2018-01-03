@@ -1,4 +1,4 @@
-package name.cdd.study.flink.demo;
+package name.cdd.study.flink.demo.sample;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.apache.flink.util.StringUtils;
 
 import com.google.common.collect.Lists;
 
-import name.cdd.study.flink.demo.pojo.CodeTimePair;
+import name.cdd.study.flink.demo.sample.pojo.CodeTimePair;
 
 //参考：http://blog.csdn.net/lmalds/article/details/52704170
 //1461756862000 2016-04-27 19:34:22   窗口（19:34:21 ~ 19:34:24)

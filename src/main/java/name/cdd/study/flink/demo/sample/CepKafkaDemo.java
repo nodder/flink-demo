@@ -1,4 +1,4 @@
-package name.cdd.study.flink.demo;
+package name.cdd.study.flink.demo.sample;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,7 +22,6 @@ import org.apache.flink.streaming.api.functions.timestamps.AscendingTimestampExt
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer011;
 import org.apache.flink.streaming.util.serialization.JSONDeserializationSchema;
-
 
 //-input-topic fin -output-topic fout -bootstrap-server hadoop2:9092,hadoop3:9092,hadoop4:9092 -group-id flink-group
 //group-id可选

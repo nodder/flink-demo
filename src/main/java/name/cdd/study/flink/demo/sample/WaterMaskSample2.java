@@ -1,4 +1,4 @@
-package name.cdd.study.flink.demo;
+package name.cdd.study.flink.demo.sample;
 
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.streaming.api.TimeCharacteristic;

@@ -1,4 +1,4 @@
-package name.cdd.study.flink.demo.pojo;
+package name.cdd.study.flink.demo.sample.pojo;
 
 public class CodeTimePair //可以使用Tuple2代替
 {

@@ -1,4 +1,4 @@
-package name.cdd.study.flink.demo;
+package name.cdd.study.flink.demo.sample;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

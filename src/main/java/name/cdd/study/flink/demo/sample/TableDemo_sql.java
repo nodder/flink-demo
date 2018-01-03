@@ -1,4 +1,4 @@
-package name.cdd.study.flink.demo;
+package name.cdd.study.flink.demo.sample;
 
 import java.util.Properties;
 
@@ -26,7 +26,7 @@ import org.apache.flink.types.Row;
 
 //{"id": 1001, "name":"cdd", "score":100}
 //{"id": 1001, "name":"baly", "score":50}
-public class TableDemo_sql_kafka
+public class TableDemo_sql
 {
     public static void main(String[] args) throws Exception
     {

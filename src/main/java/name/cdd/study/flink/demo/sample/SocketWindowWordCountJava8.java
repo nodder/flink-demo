@@ -1,4 +1,4 @@
-package name.cdd.study.flink.demo;
+package name.cdd.study.flink.demo.sample;
 
 import static org.apache.flink.streaming.api.windowing.time.Time.seconds;
 
@@ -8,7 +8,7 @@ import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 
-import name.cdd.study.flink.demo.pojo.WordWithCount;
+import name.cdd.study.flink.demo.sample.pojo.WordWithCount;
 
 /**
  * Flink入门第一个例子，jdk8版本。
