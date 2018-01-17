@@ -2,6 +2,7 @@ package name.cdd.study.flink.demo.sample;
 
 import java.util.Properties;
 
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -14,7 +15,8 @@ import org.apache.flink.table.api.Types;
 import org.apache.flink.table.api.java.StreamTableEnvironment;
 import org.apache.flink.types.Row;
 
-import name.cdd.study.flink.demo.onesight.table.function.PlusOne;
+import name.cdd.study.flink.demo.onesight.table.function.GetSumByDay;
+import name.cdd.study.flink.demo.onesight.table.function.SumWithinADay;
 
 //https://segmentfault.com/a/1190000005595920
 //http://flink.apache.org/news/2016/05/24/stream-sql.html
@@ -37,7 +39,8 @@ public class TableDemo_tableFunction
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         StreamTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(env);
         
-        tableEnv.registerFunction(PlusOne.METHOD_NAME, new PlusOne());
+        tableEnv.registerFunction(SumWithinADay.METHOD_NAME, new SumWithinADay());
+        tableEnv.registerFunction(GetSumByDay.METHOD_NAME, new GetSumByDay());
         
         KafkaTableSource tableSource = Kafka011JsonTableSource.builder()
                         .forTopic(inputTopic)
@@ -56,8 +59,11 @@ public class TableDemo_tableFunction
 //        {"id": 1001, "score":100, "theDay":2}
 //        {"id": 1001, "score":101, "theDay":2}
 //        {"id": 1001, "score":22, "theDay":1}
-        Table resultTable = tableEnv.sqlQuery("select id, PLUS_ONE(score, theDay) from table1 group by id"); 
-        DataStream<Row> resultDs = tableEnv.toDataStream(resultTable, Row.class);
+//        Table resultTable = tableEnv.sqlQuery("select id, PLUS_ONE(score, theDay) from table1 group by id"); 
+//        DataStream<Row> resultDs = tableEnv.toDataStream(resultTable, Row.class);
+        
+        Table resultTable = tableEnv.sqlQuery("select id, theDay, GET_SUM(Sum_OneDay(theDay, score), theDay) from table1 group by id, theDay"); 
+        DataStream<Tuple2<Boolean, Row>> resultDs = tableEnv.toRetractStream(resultTable, Row.class);
         resultDs.print();
         
         env.execute("TableDemo_sql_kafka");

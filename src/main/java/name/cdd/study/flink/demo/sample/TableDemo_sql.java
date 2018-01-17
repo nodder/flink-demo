@@ -67,7 +67,7 @@ public class TableDemo_sql
     //输入{"id": 1001, "name":"cdd", "score":110}，输出：2> 1001,cdd,110
     static void case3_append_only_print(StreamTableEnvironment tableEnv)
     {
-        Table resultTable = tableEnv.sqlQuery("select * from table1 where score>=60");//这个可以使用toAppendStream或者toRetractStream
+        Table resultTable = tableEnv.sqlQuery("select * from table1 where score>=60");
         DataStream<Row> resultDs = tableEnv.toDataStream(resultTable, Row.class);
         resultDs.print();
     }
@@ -76,7 +76,7 @@ public class TableDemo_sql
     //再输入{"id": 1001, "name":"aaa", "score":120}，输出3> (false,1001,110) \n3> (true,1001,230)
     static void case4_retract_print(StreamTableEnvironment tableEnv)
     {
-        Table resultTable = tableEnv.sqlQuery("select id, sum(score) from table1 where score>=60 group by id"); //这个只能使用toRetractStream
+        Table resultTable = tableEnv.sqlQuery("select id, sum(score) from table1 where score>=60 group by id");
         DataStream<Tuple2<Boolean, Row>> resultDs = tableEnv.toRetractStream(resultTable, Row.class);
         resultDs.print();
     }
@@ -84,7 +84,7 @@ public class TableDemo_sql
     //输入{"id": 1001, "name":"cdd", "score":110}，输出：{"id":1001,"name":"cdd","score":110}
     static void case2_append_only_to_kafka(String outputTopic, Properties props, StreamTableEnvironment tableEnv)
     {
-        Table resultTable = tableEnv.sqlQuery("select * from table1 where score>=60");//这个可以使用toAppendStream或者toRetractStream
+        Table resultTable = tableEnv.sqlQuery("select * from table1 where score>=60");
         Kafka010JsonTableSink tableSink = new Kafka010JsonTableSink(outputTopic, props, new FlinkFixedPartitioner<Row>());
         resultTable.writeToSink(tableSink);
     }
@@ -92,7 +92,7 @@ public class TableDemo_sql
     //输入{"id": 1001, "name":"cdd", "score":110}，输出：1001|cdd|110
     static void case1_append_only_to_csv(StreamTableEnvironment tableEnv)
     {
-        Table resultTable = tableEnv.sqlQuery("select * from table1 where score>=60");//这个可以使用toAppendStream或者toRetractStream        
+        Table resultTable = tableEnv.sqlQuery("select * from table1 where score>=60");        
         //CsvTableSink第三个参数是生成文件数，本机测试默认是4。如果是1，则table_output是文件名，如果大于1，则table_output是目录名，该目录下生成1, 2, 3...这样的文件。
         //CsvTableSink支持batch和append-only的table
         resultTable.writeToSink(new CsvTableSink("src/main/resources/table_output", "|", 1, WriteMode.OVERWRITE));

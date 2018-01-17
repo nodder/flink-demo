@@ -21,6 +21,11 @@ public class RedisSetRowMapper implements RedisMapper<Row>
         this.columnNames = columnNames;
         this.key = key;
     }
+    
+    public RedisSetRowMapper(String key)
+    {
+        this.key = key;
+    }
 
     @Override
     public RedisCommandDescription getCommandDescription() {
@@ -34,6 +39,11 @@ public class RedisSetRowMapper implements RedisMapper<Row>
 
     @Override
     public String getValueFromData(Row row) {
+        if(this.columnNames == null)
+        {
+            return row.toString();
+        }
+        
         ObjectNode objectNode = mapper.createObjectNode();
 
         for (int i = 0; i < row.getArity(); i++) {
